@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name><![CDATA[Country List status]]></name>
+  <code><![CDATA[prai_country_list_status]]></code>
+	<version><![CDATA[1.0]]></version>
+	<author><![CDATA[REDS PRAI]]></author>
+	<link><![CDATA[https://www.agenciaprai.com/]]></link>
+		
+    <file path="admin/controller/localisation/country.php" error="skip">
+			<operation>
+				<search><![CDATA['iso_code_3' => $result['iso_code_3'],]]></search>
+				<add position="after" trim="true"><![CDATA[
+				'default' 	 => ($result['country_id'] == $this->config->get('config_country_id')),
+				'postcode' 	 => $result['postcode_required'] ? '<i class="fa fa-check fa-lg text-success"></i>' : '<i class="fa fa-minus fa-lg text-danger"></i>',
+				'status' 		 => $result['status'] ? $this->language->get('text_enabled') : $this->language->get('text_disabled'),
+				]]></add>
+			</operation>
+    </file>
+		<file path="admin/view/template/localisation/country_list.twig" error="skip">
+			<operation>
+				<search><![CDATA[<td class="text-left">{% if sort == 'name' %}]]></search>
+				<add position="before"><![CDATA[<td class="text-center">ID</td>]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[<td class="text-left">{{ country.name }}</td>]]></search>
+				<add position="before"><![CDATA[<td class="text-left">{{ country.country_id }}</td>]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[<td class="text-right">{{ column_action }}</td>]]></search>
+				<add position="before" trim="true"><![CDATA[
+				<td class="text-center">CEP*</td>	
+				<td class="text-center">Status</td>
+				]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[<td class="text-left">{{ country.iso_code_3 }}</td>]]></search>
+				<add position="after"><![CDATA[
+				<td class="text-center">{{ country.postcode }}</td>
+				<td class="text-center">{{ country.status }}</td>
+				]]></add>
+			</operation>
+			<operation>
+				<search index="1" limit="1"><![CDATA[<tr>]]></search>
+				<add position="replace"><![CDATA[<tr {% if country.default %} class="bg-info" {% endif %}>]]></add>
+			</operation>
+			<operation>
+				<search><![CDATA[<td class="text-center" colspan="5">]]></search>
+				<add position="replace"><![CDATA[<td class="text-center" colspan="7">]]></add>
+			</operation>
+			
+		</file>
+
+</modification>
